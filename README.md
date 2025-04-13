@@ -1,6 +1,6 @@
 # LERL-for-soft-robots
 
-# Code of "Fast morphological adaptation in soft robots via reinforcement learning"
+%# Code of "Fast morphological adaptation in soft robots via reinforcement learning"
 
 ## Part 1 Policy learning in single configuration
 
