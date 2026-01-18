@@ -71,7 +71,7 @@ T = koopman_net.T.detach().numpy().T # 12*12
 
 ## Part 2 Policy adaptation to multiple configurations of elephant-trunk robots
 
-Here we take the policy adaption to the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ in **Part 2.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.3** is transferred and updated online to adapt to the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ in **Part 2.2**.
+Here we take the policy adaption to the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $E^4_S$-$E^3_S$ in **Part 2.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.3** is transferred and updated online to adapt to the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ in **Part 2.2**.
 
 ### Part 2.1 Step 1 Feedforward policy learning for the configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$
 
