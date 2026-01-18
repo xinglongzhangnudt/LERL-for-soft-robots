@@ -247,7 +247,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
  K0 = K    
    
 ```    
- -Note that $u \in  \mathbb{R}^4$ for the configuration $E^1_S$, while the hybrid soft robot contains the honeycomb segment $\text{E}^4_\text{S}$  with $u \in  \mathbb{R}^4$ and the soft-muscle segment $\text{E}_\text{L}$  with $u \in  \mathbb{R}^3$. We address this problem via the following presented action allocation strategy.   Load the same action allocation matrix $\text{T}_\text{a}$ as **Part 3.2** for the control inputs for the soft-muscle segment $\text{E}_\text{L}$ .    
+ -Note that $u \in  \mathbb{R}^4$ for the configuration $E^1_S$, while the hybrid soft robot contains the honeycomb segment $E^4_S$  with $u \in  \mathbb{R}^4$ and the soft-muscle segment $U_L$  with $u \in  \mathbb{R}^3$. We address this problem via the following presented action allocation strategy.   Load the same action allocation matrix $T_a$ as **Part 3.2** for the control inputs for the soft-muscle segment $U_L$ .    
     
 ```python    
  u = np.clip(u, 0, 1).flatten()    
