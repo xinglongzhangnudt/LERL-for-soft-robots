@@ -3,7 +3,7 @@
 
 ## Part 1 Policy learning in single configuration
 
-An MLP-based Koopman embedding was first trained under the honeycomb segment $\text{E}^{1}_\text{S}$ with regularization in **Part 1.1**. Then, LERL learns the policy within the pretrained embedding space, including the offline feedforward policy generation in **Part 1.2** and the online feedback policy training in **Part 1.3** .
+An MLP-based Koopman embedding was first trained under the honeycomb segment $E^1_S$ with regularization in **Part 1.1**. Then, LERL learns the policy within the pretrained embedding space, including the offline feedforward policy generation in **Part 1.2** and the online feedback policy training in **Part 1.3** .
 
 ### Part 1.1 Step 1 Pretrain embedding for one honeycomb segment
 
