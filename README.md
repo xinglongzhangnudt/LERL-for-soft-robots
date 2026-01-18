@@ -127,7 +127,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
  Here we take the policy adaption to the new configuration $E^4_S$-$E^3_S$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $E^4_S$-$E^3_S$ in **Part 2.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $E^4_S$-$E^3_S$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.2** is transferred and updated online to adapt to the new configuration $E^4_S$-$E^3_S$ in **Part 2.2**.    
     
 #### Part 2.1 Step 1 Feedforward policy learning for the configuration $E^4_S$-$E^3_S$    
- - Collect quasi-static motion data of the configuration $E^4_S$-$E^3_S$ and place them in the path "policy_adaptation_multiple_configuration/step1_feedforward_policy_training/quasi_static_data_es4_es3.mat".    
+ - Collect quasi-static motion data of the configuration $E^4_S-E^3_S$ and place them in the path "policy_adaptation_multiple_configuration/step1_feedforward_policy_training/quasi_static_data_es4_es3.mat".    
     
 - Run "feedforward_policy_training_es4_es3.py" to get the feedforward policy "feedforward_policy_es4_es3.pth".    
     
