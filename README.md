@@ -1,3 +1,4 @@
+
 # Code of “Reinforcement learning in linear embedding space unlocks  generalizable control across soft robot configurations”
 
 ## Description
@@ -49,7 +50,7 @@ You can install all required libraries by running the following command:
 `pip install -r requirements.txt`   
 ## Usage  
 
-Our code execution process is quite similar across different configurations. Taking the 1-segment configuration $\text{E}^{1}_\text{S}$ as an example, you can follow the steps below to perform Koopman Embedding pre-training and online control using our method.
+Our code execution process is quite similar across different configurations. Taking the 1-segment configuration $E^1_S$ as an example, you can follow the steps below to perform Koopman Embedding pre-training and online control using our method.
   
 1.  **Pre-train the Koopman Embedding:**    
 - Run the file `Koopman_embedding_training.py` in the path `lerl_source_code/Koopman_embedding_training` to pre-train the Koopman embedding model.  
@@ -89,7 +90,7 @@ buffer = struct.pack("dddd", u_input[0], u_input[1], u_input[2], u_input[3]) wri
 
 ### Part 1 Policy learning in single configuration    
     
-An MLP-based Koopman embedding was first trained under the honeycomb segment $\text{E}^{1}_\text{S}$ with regularization in **Part-pre**. Then, LERL learns the policy within the pretrained embedding space, including the offline feedforward policy generation in **Part 1.1** and the online feedback policy training in **Part 1.2** .    
+An MLP-based Koopman embedding was first trained under the honeycomb segment $E^1_S$ with regularization in **Part-pre**. Then, LERL learns the policy within the pretrained embedding space, including the offline feedforward policy generation in **Part 1.1** and the online feedback policy training in **Part 1.2** .    
     
 #### Part 1.1 Step 2 Feedforward policy learning for one honeycomb segment    
  - Collect quasi-static motion data and place them in the path "policy_learning_single_configuration/step2_feedforward_policy_training/quasi_static_data_es1.mat";    
@@ -123,14 +124,14 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  - Run "online_policy_learning.py" and save the learnned policy in the path "policy_learning _single_configuration/step3_online_policy_learning_target_reaching/policy/lerl_policy.mat"    
     
 ### Part 2 Policy adaptation to multiple configurations of elephant-trunk robots    
- Here we take the policy adaption to the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ in **Part 2.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.2** is transferred and updated online to adapt to the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ in **Part 2.2**.    
+ Here we take the policy adaption to the new configuration $\E^{4}_S$-$E^{3}_S$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $\E^{4}_S$-$E^{3}_S$ in **Part 2.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $\E^{4}_S$-$E^{3}_S$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.2** is transferred and updated online to adapt to the new configuration $\E^{4}_S$-$E^{3}_S$ in **Part 2.2**.    
     
-#### Part 2.1 Step 1 Feedforward policy learning for the configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$    
- - Collect quasi-static motion data of the configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$ and place them in the path "policy_adaptation_multiple_configuration/step1_feedforward_policy_training/quasi_static_data_es4_es3.mat".    
+#### Part 2.1 Step 1 Feedforward policy learning for the configuration $\E^{4}_S$-$E^{3}_S$    
+ - Collect quasi-static motion data of the configuration $\E^{4}_S$-$E^{3}_S$ and place them in the path "policy_adaptation_multiple_configuration/step1_feedforward_policy_training/quasi_static_data_es4_es3.mat".    
     
 - Run "feedforward_policy_training_es4_es3.py" to get the feedforward policy "feedforward_policy_es4_es3.pth".    
     
-#### Part 2.2 Step2 Policy transfer and online policy learning for the configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$    
+#### Part 2.2 Step2 Policy transfer and online policy learning for the configuration $\E^{4}_S$-$E^{3}_S$    
  - Run "transfer_and_online_policy_learning_es4_es3.py" in the path "/policy_adaptation_multiple_configuration/step2_transfer_and_online_policy_learning"    
     
 - Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
@@ -149,7 +150,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  encoder.eval()    
  T = koopman_net.T.detach().numpy().T    
  ```    
- - Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$. Note that $u \in  \mathbb{R}^4$ for the configuration $\text{E}^{1}_\text{S}$, while $u \in  \mathbb{R}^8$ holds for the new configuration $\text{E}^{4}_\text{S}$-$\text{E}^{3}_\text{S}$. We expand the pretrained $H$ matrix to address this disrcepancy.    
+ - Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $\E^{4}_S$-$E^{3}_S$. Note that $u \in  \mathbb{R}^4$ for the configuration $E^1_S$, while $u \in  \mathbb{R}^8$ holds for the new configuration $\E^{4}_S$-$E^{3}_S$. We expand the pretrained $H$ matrix to address this disrcepancy.    
     
 ```python    
  mat = scipy.io.loadmat(    
@@ -177,21 +178,21 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  - Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
     
 ### Part 3 Policy adaptation to heterogeneous soft-muscle robot    
- We take the policy adaption to the configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$ as an example to show the explicit steps to realize policy adaptation to soft-muscle robots. The feedforward policy is retrained for the new configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$ in **Part 3.1**. The Koopman embedding trained in **Part 1.1** is reused  for the new configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the heterogeneous soft-muscle robot via the action allocation strategy, and updated online, as presented in **Part 3.2**.    
+ We take the policy adaption to the configuration $U_L$-$\U_M$-$U_S$ as an example to show the explicit steps to realize policy adaptation to soft-muscle robots. The feedforward policy is retrained for the new configuration $U_L$-$\U_M$-$U_S$ in **Part 3.1**. The Koopman embedding trained in **Part 1.1** is reused  for the new configuration $U_L$-$\U_M$-$U_S$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the heterogeneous soft-muscle robot via the action allocation strategy, and updated online, as presented in **Part 3.2**.    
     
-#### Part 3.1 Step 1 Feedforward policy learning for the configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$    
- - Collect quasi-static motion data of the configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$ and place them in the path "policy_adaptation_soft_muscle_robot/step1_feedforward_policy_training/quasi_static_data_el_em_es.mat".    
+#### Part 3.1 Step 1 Feedforward policy learning for the configuration $U_L$-$\U_M$-$U_S$    
+ - Collect quasi-static motion data of the configuration $U_L$-$\U_M$-$U_S$ and place them in the path "policy_adaptation_soft_muscle_robot/step1_feedforward_policy_training/quasi_static_data_el_em_es.mat".    
     
 - Run "feedforward_policy_training_el_em_es.py" to get the feedforward policy "feedforward_policy_el_em_es.pth".    
     
-#### Part 3.2 Step2 Policy transfer and online policy learning for the configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$    
+#### Part 3.2 Step2 Policy transfer and online policy learning for the configuration $U_L$-$\U_M$-$U_S$    
  - Run "transfer_and_online_policy_learning_el_em_es.py" in the path "policy_adaptation_soft_muscle_robot/step2_transfer_and_online_policy_learning"    
     
 - Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
     
     
     
-- Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$.     
+- Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $U_L$-$\U_M$-$U_S$.     
     
 ```python    
  # If you want to transfer and run online learning,implement this code and set the n_learning_step:    
@@ -203,7 +204,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  K0 = K    
    
 ```    
- - Note that $u \in  \mathbb{R}^4$ for the configuration $\text{E}^{1}_\text{S}$, while $u \in  \mathbb{R}^3$ holds for each segment of the soft-muscle robot $\text{U}_\text{L}$-$\text{U}_\text{M}$-$\text{U}_\text{S}$.  This problem is addressed by our designed action allocation strategy.  Firstly, load the action allocation matrix $\text{T}_\text{a}$ which has been restored in the file "Matrix_Ta.mat".    
+ - Note that $u \in  \mathbb{R}^4$ for the configuration $E^1_S$, while $u \in  \mathbb{R}^3$ holds for each segment of the soft-muscle robot $U_L$-$\U_M$-$U_S$.  This problem is addressed by our designed action allocation strategy.  Firstly, load the action allocation matrix $\text{T}_\text{a}$ which has been restored in the file "Matrix_Ta.mat".    
     
 ```python    
  u_mat = scipy.io.loadmat(r"Matrix_Ta.mat")    
@@ -218,23 +219,24 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  u_airmuscle[3:6, 0] = np.array(u_mat['TransMatrix_4to3_invert']) @ u[4:8]    
  u_airmuscle[6:9, 0] = np.array(u_mat['TransMatrix_4to3']) @ u[8:12]    
    
-``` - Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
+``` 
+- Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
     
 ### Part 4 Policy adaptation to hybrid soft robot     
- Here we take the policy adaption to the configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$ as an example to show the explicit steps to realize policy adaptation to hybrid soft robots, composed of honeycomb and soft-muscle segments . The feedforward policy is retrained for the new configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$ in **Part 4.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the hybrid soft robot $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$ based on the action allocation strategy, and updated online, as presented in **Part 4.2**.    
+ Here we take the policy adaption to the configuration $E^{4}_S$-$U_L$ as an example to show the explicit steps to realize policy adaptation to hybrid soft robots, composed of honeycomb and soft-muscle segments . The feedforward policy is retrained for the new configuration $E^{4}_S$-$U_L$ in **Part 4.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $E^{4}_S$-$U_L$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the hybrid soft robot $E^{4}_S$-$U_L$ based on the action allocation strategy, and updated online, as presented in **Part 4.2**.    
     
-#### Part 4.1 Step 1 Feedforward policy learning for the configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$    
- - Collect quasi-static motion data of the configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$ and place them in the path "policy_adaptation_hybrid_robot/step1_feedforward_policy_training/quasi_static_data_es4_el.mat".    
+#### Part 4.1 Step 1 Feedforward policy learning for the configuration $E^{4}_S$-$U_L$    
+ - Collect quasi-static motion data of the configuration $E^{4}_S$-$U_L$ and place them in the path "policy_adaptation_hybrid_robot/step1_feedforward_policy_training/quasi_static_data_es4_el.mat".    
     
 - Run "feedforward_policy_training_es4_el.py" to get the feedforward policy "feedforward_policy_es4_el.pth".    
     
-#### Part 4.2 Step2 Policy transfer and online policy learning for the configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$    
+#### Part 4.2 Step2 Policy transfer and online policy learning for the configuration $E^{4}_S$-$U_L$    
  - Run "transfer_and_online_policy_learning_es4_el.py" in the path "policy_adaptation_hybrid_robot/step2_transfer_and_online_policy_learning"    
     
 - Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
     
     
-- Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $\text{E}^{4}_\text{S}$-$\text{U}_\text{L}$.     
+- Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $E^{4}_S$-$U_L$.     
     
 ```python    
  # If you want to transfer and run online learning,implement this code and set the n_learning_step:    
@@ -245,7 +247,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  K0 = K    
    
 ```    
- -Note that $u \in  \mathbb{R}^4$ for the configuration $\text{E}^{1}_\text{S}$, while the hybrid soft robot contains the honeycomb segment $\text{E}^{4}_\text{S}$  with $u \in  \mathbb{R}^4$ and the soft-muscle segment $\text{E}_\text{L}$  with $u \in  \mathbb{R}^3$. We address this problem via the following presented action allocation strategy.   Load the same action allocation matrix $\text{T}_\text{a}$ as **Part 3.2** for the control inputs for the soft-muscle segment $\text{E}_\text{L}$ .    
+ -Note that $u \in  \mathbb{R}^4$ for the configuration $E^1_S$, while the hybrid soft robot contains the honeycomb segment $\text{E}^{4}_\text{S}$  with $u \in  \mathbb{R}^4$ and the soft-muscle segment $\text{E}_\text{L}$  with $u \in  \mathbb{R}^3$. We address this problem via the following presented action allocation strategy.   Load the same action allocation matrix $\text{T}_\text{a}$ as **Part 3.2** for the control inputs for the soft-muscle segment $\text{E}_\text{L}$ .    
     
 ```python    
  u = np.clip(u, 0, 1).flatten()    
@@ -255,9 +257,10 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  u_input = np.clip(3 * u, 0, 3)    
  u_input[4:7] = u_airmuscle    
    
-``` - Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
+``` 
+- Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
     
-### Part 5 Policy adaptation to heterogeneous worm robot $\text{O}_\text{M}$    
+### Part 5 Policy adaptation to heterogeneous worm robot $O_M$    
  #### Part 5.1 Step 1 Policy initialization    
  - Collect 10k samples $\{x,u\}$ under sinusoidal excitation, and place the resulting dataset in the path "/policy_adaptation_worm_robot_em/step1_policy_initilization".    
     
@@ -265,7 +268,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
     
 - Save the learned initial feeback policy "initial_feedback_policy.mat" in the path "/policy_adaptation_worm_robot_em/step1_policy_initilization".    
     
-#### Part 5.2 Step 2 Feedforward policy learning for the configuration $\text{O}_\text{M}$    
+#### Part 5.2 Step 2 Feedforward policy learning for the configuration $O_M$    
  - Collect quasi-static motion data of the configuration $\text{E}_\text{M}$ and place them in the path "/policy_adaptation_worm_robot_em/step2_feedforward_policy_training/quasi_static_data_em.mat".    
     
 - Run "feedforward_policy_training_em.py" to get the feedforward policy "feedforward_policy_em.pth" saved in "/policy_adaptation_worm_robot_em/step2_feedforward_policy_training/pretrained_feedforward_policy_em".    
@@ -284,7 +287,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  save_model_to_mat(state_dict_control, Elayer_control)    
    
 ```    
- #### Part 5.3 Step3 Policy transfer and online policy learning for the configuration $\text{O}_\text{M}$    
+ #### Part 5.3 Step3 Policy transfer and online policy learning for the configuration $O_M$    
  - Run "transfer_and_online_policy_learning_em.m" in the path "/policy_adaptation_worm_robot_em/step3_online_policy_learning_and_transfer" to learn the feedback policy for the $\text{E}_\text{M}$.    
     
 - Load pretrained koopman embedding from **Part 1.1** in the path"policy_learning _single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding/Koopman_embedding_for_matlab.mat"    
@@ -328,18 +331,18 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  ```    
  - Save the learned policy as "policy_em.mat" .    
     
-### Part 6 Policy adaptation to heterogeneous worm robot $\text{O}_\text{M}$-$\text{O}_\text{L}$    
- #### Part 6.1 Step 1 Feedforward policy learning for the configuration $\text{O}_\text{M}$-$\text{O}_\text{L}$    
- - Collect quasi-static motion data of the configuration $\text{O}_\text{M}$-$\text{O}_\text{L}$ and place them in the path "policy_adaptation_worm_robot_em_el/step1_feedforward_policy_training/quasi_static_data_em_el.mat".    
+### Part 6 Policy adaptation to heterogeneous worm robot $O_M$-$O_L$    
+ #### Part 6.1 Step 1 Feedforward policy learning for the configuration $O_M$-$O_L$    
+ - Collect quasi-static motion data of the configuration $O_M$-$O_L$ and place them in the path "policy_adaptation_worm_robot_em_el/step1_feedforward_policy_training/quasi_static_data_em_el.mat".    
     
 - Run "feedforward_policy_training_em_el.py" to get the feedforward policy "feedforward_policy_em_el.pth.pth" saved in "policy_adaptation_worm_robot_em_e/step1_feedforward_policy_training/pretrained_feedforward_policy_em_el".    
     
 - Run "pth_to_mat.py" to convert the feedforward_policy "feedforward_policy_em_el.pth" into the format "feedforward_policy_em_el.mat" suitable for Matlab.    
     
-#### Part 6.2 Step2 Policy transfer and online policy learning for the configuration $\text{O}_\text{M}$-$\text{O}_\text{L}$    
+#### Part 6.2 Step2 Policy transfer and online policy learning for the configuration $O_M$-$O_L$    
  - Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
     
-- Load the policy learned in **Part 5.3** as the initial policy for the online polilcy learning of the configuration $\text{O}_\text{M}$-$\text{O}_\text{L}$. Note that $u \in  \mathbb{R}^3$ for the configuration $\text{E}_\text{M}$, while $u \in  \mathbb{R}^6$ holds for the new configuration $\text{O}_\text{M}$-$\text{O}_\text{L}$. We expand the pretrained $H$ matrix to address this disrcepancy.    
+- Load the policy learned in **Part 5.3** as the initial policy for the online polilcy learning of the configuration $O_M$-$O_L$. Note that $u \in  \mathbb{R}^3$ for the configuration $\text{E}_\text{M}$, while $u \in  \mathbb{R}^6$ holds for the new configuration $O_M$-$O_L$. We expand the pretrained $H$ matrix to address this disrcepancy.    
     
 ```matlab    
  % Load pretrained policy and Extend H    
@@ -362,4 +365,4 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $\t
  Hyx1 = H(nr+1:nr+m, 1:nr);    
  K = inv(Hyy1) * Hyx1;    
  ```    
- - Run "transfer_and_online_policy_learning_em_el.m" in the path "/policy_adaptation_worm_robot_em_el/step2_online_policy_learning_and_transfer" to online learn the policy fo the configuration $\text{O}_\text{M}$-$\text{O}_\text{L}$.
+ - Run "transfer_and_online_policy_learning_em_el.m" in the path "/policy_adaptation_worm_robot_em_el/step2_online_policy_learning_and_transfer" to online learn the policy fo the configuration $O_M$-$O_L$.
