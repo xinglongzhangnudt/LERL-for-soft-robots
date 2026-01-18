@@ -18,8 +18,8 @@ Here is the file structure of the project:
   
 ### Function diagrams 
 The function structure and calling relationships of the core code are as follows:
- ![Diagram of Koopman embedding training](images/diagram.jpeg)
- ![Diagram of online learning](images/diagram2.jpeg)
+ ![Diagram of Koopman embedding training](images/diagram.jpg)
+ ![Diagram of online learning](images/diagram2.jpg)
   
 ## Requirements  
   
