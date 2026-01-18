@@ -1,4 +1,5 @@
 
+
 # Code of “Reinforcement learning in linear embedding space unlocks  generalizable control across soft robot configurations”
 
 ## Description
@@ -7,15 +8,20 @@ This project demonstrates the training and deployment process of our method as d
 ### File structure
 Here is the file structure of the project:
 
-    ├── lerl_source_code/
-	   ├── Koopman_embedding_training/
-	   ├── policy_adaptation_hybrid_robot/
-	   ├── policy_adaptation_multiple_configuration/
-	   ├── policy_adaptation_soft_muscle_robot/
-	   ├── policy_adaptation_worm_robot_Om/
-	   ├── policy_adaptation_worm_robot_Om_Ol/
-	   ├── policy_learning_single_configuration/
-	   ├── Readme.md
+	├── images/
+	    ├── function_diagram.jpg
+	    ├── function_diagram2.jpg
+	├── lerl_source_code/
+	    ├── Koopman_embedding_training/
+	    ├── policy_adaptation_hybrid_robot/
+	    ├── policy_adaptation_multiple_configuration/
+	    ├── policy_adaptation_soft_muscle_robot/
+	    ├── policy_adaptation_worm_robot_Om/
+	    ├── policy_adaptation_worm_robot_Om_Ol/
+	    ├── policy_learning_single_configuration/
+	├── Readme.md
+	├── requirements.txt
+
   
 ### Function diagrams 
 The function structure and calling relationships of the core code are as follows:
@@ -83,49 +89,49 @@ buffer = struct.pack("dddd", u_input[0], u_input[1], u_input[2], u_input[3]) wri
 ## Details  
   ### Part-pre Pretrain embedding for one honeycomb segment 
   
-   - Collect samples $\{x,u\}$ under sinusoidal excitation, and place the resulting dataset in the path which you set in file "Utils_one_20k.py" in the path "/policy_learning_single_configuration/step1_koopman_embedding_training".    
+   - Collect samples $\{x,u\}$ under sinusoidal excitation, and place the resulting dataset in the path which you set in file "Utils_one_20k.py" in the path `/Koopman_embedding_training`.    
     
-- Run "koopman_embedding_training.py" to pretrain the Koopman embedding.    
+- Run `Koopman_embedding_training.py` to pretrain the Koopman embedding.    
     
-- Save the pretrained Koopman embedding "epoch=1759-train_loss=0.08255.ckpt" in the path "/policy_learning_single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding"    
+- Save the pretrained Koopman embedding `epoch=1759-train_loss=0.08255.ckpt` in the path `/Koopman_embedding_training/pretrained_Koopman_embedding`    
 
 ### Part 1 Policy learning in single configuration    
     
 An MLP-based Koopman embedding was first trained under the honeycomb segment $E^1_S$ with regularization in **Part-pre**. Then, LERL learns the policy within the pretrained embedding space, including the offline feedforward policy generation in **Part 1.1** and the online feedback policy training in **Part 1.2** .    
     
-#### Part 1.1 Step 2 Feedforward policy learning for one honeycomb segment    
+#### Part 1.1 Step 1 Feedforward policy learning for one honeycomb segment    
  - Collect quasi-static motion data and place them in the path "policy_learning_single_configuration/step2_feedforward_policy_training/quasi_static_data_es1.mat";    
     
 - Run "feedforward_policy_training_es1.py" to learn the feedforward policy "feedforward_policy_es1.pth"    
     
-#### Part 1.2 Step 3 Online policy learning for one honeycomb segment    
+#### Part 1.2 Step 2 Online policy learning for one honeycomb segment    
  - Load the pretrained Koopman embedding and feedforward policy    
     
 ``` python # load feedforward_network    
- model_path = "policy_learning_single_configuration/step2_feedforward_policy_training/feedforward_policy_es1.pth"    
+ model_path = "policy_learning_single_configuration/step1_feedforward_policy_training/feedforward_policy_es1.pth"    
  dicts_control = torch.load(model_path, map_location=torch.device('cpu'))    
  state_dict_control = dicts_control["model"]    
  Elayer_control = dicts_control["layer"]    
  net_control = U_net(Elayer_control)    
  net_control.load_state_dict(state_dict_control)    
  print(net_control)    
- with  open('policy_learning_single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding/args.pkl', 'rb') as f:    
+ with  open('policy_learning_single_configuration/step1_Koopman_embedding_training/pretrained_Koopman_embedding/args.pkl', 'rb') as f:    
  args_dict = pickle.load(f)    
  args = argparse.Namespace(**args_dict)    
  args = vars(args)    
- dck = DeepEDMD.load_from_checkpoint(checkpoint_path='policy_learning_single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding/epoch=1759-train_loss=0.08255.ckpt', save_params=False, args=args)    
- koopman_net = dck.koopman_net    
- koopman_net.eval()    
+ dck = DeepEDMD.load_from_checkpoint(checkpoint_path='policy_learning_single_configuration/step1_Koopman_embedding_training/pretrained_Koopman_embedding/epoch=1759-train_loss=0.08255.ckpt', save_params=False, args=args)    
+ Koopman_net = dck.Koopman_net    
+ Koopman_net.eval()    
  encoder = dck.encoder_net    
  encoder.eval()    
- A = koopman_net.A.detach().numpy()    
- B = koopman_net.B.detach().numpy()    
- T = koopman_net.T.detach().numpy().T # 12*12    
+ A = Koopman_net.A.detach().numpy()    
+ B = Koopman_net.B.detach().numpy()    
+ T = Koopman_net.T.detach().numpy().T # 12*12    
  ```    
  - Run "online_policy_learning.py" and save the learnned policy in the path "policy_learning _single_configuration/step3_online_policy_learning_target_reaching/policy/lerl_policy.mat"    
     
 ### Part 2 Policy adaptation to multiple configurations of elephant-trunk robots    
- Here we take the policy adaption to the new configuration $E^4_S-E^3_S$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $E^4_S-E^3_S$ in **Part 2.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $E^4_S-E^3_S$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.2** is transferred and updated online to adapt to the new configuration $E^4_S-E^3_S$ in **Part 2.2**.    
+ Here we take the policy adaption to the new configuration $E^4_S-E^3_S$ as an example to show the explicit steps to realize policy adaptation to multiple configurations of elephant-trunk robots. The feedforward policy is retrained for the new configuration $E^4_S-E^3_S$ in **Part 2.1**. The Koopman embedding trained in **Part-pre** is shared for the new configuration $E^4_S-E^3_S$ without retraining, as presented in **Part 2.2**. The policy learned in **Part 1.2** is transferred and updated online to adapt to the new configuration $E^4_S-E^3_S$ in **Part 2.2**.    
     
 #### Part 2.1 Step 1 Feedforward policy learning for the configuration $E^4_S-E^3_S$    
  - Collect quasi-static motion data of the configuration $E^4_S-E^3_S$ and place them in the path "policy_adaptation_multiple_configuration/step1_feedforward_policy_training/quasi_static_data_es4_es3.mat".    
@@ -135,27 +141,27 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
 #### Part 2.2 Step2 Policy transfer and online policy learning for the configuration $E^4_S-E^3_S$    
  - Run "transfer_and_online_policy_learning_es4_es3.py" in the path "/policy_adaptation_multiple_configuration/step2_transfer_and_online_policy_learning"    
     
-- Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
+- Load the pretrained Koopman embedding function in **Part-pre** without retraining.    
     
 ``` python # transfer the model of E_s_2    
- with  open('policy_learning _single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding/args.pkl', 'rb') as f:    
+ with  open('Koopman_embedding_training/pretrained_Koopman_embedding/args.pkl', 'rb') as f:    
  args_dict = pickle.load(f)    
  args = argparse.Namespace(**args_dict)    
  args = vars(args)    
  dck = DeepEDMD.load_from_checkpoint(    
- checkpoint_path='policy_learning _single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding/epoch=1759-train_loss=0.08255.ckpt',    
+ checkpoint_path='Koopman_embedding_training/pretrained_Koopman_embedding/epoch=1759-train_loss=0.08255.ckpt',    
  save_params=False, args=args)    
- koopman_net = dck.koopman_net    
- koopman_net.eval()    
+ Koopman_net = dck.Koopman_net    
+ Koopman_net.eval()    
  encoder = dck.encoder_net    
  encoder.eval()    
- T = koopman_net.T.detach().numpy().T    
+ T = Koopman_net.T.detach().numpy().T    
  ```    
  - Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $E^4_S-E^3_S$. Note that $u \in  \mathbb{R}^4$ for the configuration $E^1_S$, while $u \in  \mathbb{R}^8$ holds for the new configuration $E^4_S-E^3_S$. We expand the pretrained $H$ matrix to address this disrcepancy.    
     
 ```python    
  mat = scipy.io.loadmat(    
- r"policy_learning_single_configuration/step3_online_policy_learning_target_reaching/policy/lerl_policy.mat")    
+ r"policy_learning_single_configuration/step2_online_policy_learning_target_reaching/policy/lerl_policy.mat")    
  K = mat['K']    
  H = mat['H']    
  H_vec = vec_H(H)    
@@ -179,7 +185,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
  - Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
     
 ### Part 3 Policy adaptation to heterogeneous soft-muscle robot    
- We take the policy adaption to the configuration $U_L-U_M-U_S$ as an example to show the explicit steps to realize policy adaptation to soft-muscle robots. The feedforward policy is retrained for the new configuration $U_L-U_M-U_S$ in **Part 3.1**. The Koopman embedding trained in **Part 1.1** is reused  for the new configuration $U_L-U_M-U_S$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the heterogeneous soft-muscle robot via the action allocation strategy, and updated online, as presented in **Part 3.2**.    
+ We take the policy adaption to the configuration $U_L-U_M-U_S$ as an example to show the explicit steps to realize policy adaptation to soft-muscle robots. The feedforward policy is retrained for the new configuration $U_L-U_M-U_S$ in **Part 3.1**. The Koopman embedding trained in **Part-pre** is reused  for the new configuration $U_L-U_M-U_S$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the heterogeneous soft-muscle robot via the action allocation strategy, and updated online, as presented in **Part 3.2**.    
     
 #### Part 3.1 Step 1 Feedforward policy learning for the configuration $U_L-U_M-U_S$    
  - Collect quasi-static motion data of the configuration $U_L-U_M-U_S$ and place them in the path "policy_adaptation_soft_muscle_robot/step1_feedforward_policy_training/quasi_static_data_el_em_es.mat".    
@@ -189,7 +195,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
 #### Part 3.2 Step2 Policy transfer and online policy learning for the configuration $U_L-U_M-U_S$    
  - Run "transfer_and_online_policy_learning_el_em_es.py" in the path "policy_adaptation_soft_muscle_robot/step2_transfer_and_online_policy_learning"    
     
-- Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
+- Load the pretrained Koopman embedding function in **Part-pre** without retraining.    
     
     
     
@@ -198,7 +204,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
 ```python    
  # If you want to transfer and run online learning,implement this code and set the n_learning_step:    
  mat = scipy.io.loadmat(    
- r"policy_learning_single_configuration/step3_online_policy_learning_target_reaching/policy/lerl_policy.mat")    
+ r"policy_learning_single_configuration/step2_online_policy_learning_target_reaching/policy/lerl_policy.mat")    
  K = mat['K']    
  H = mat['H']    
  H_vec = vec_H(H)    
@@ -224,7 +230,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
 - Conduct online policy learning on the basis of the transferred policy gain matrix $K$.    
     
 ### Part 4 Policy adaptation to hybrid soft robot     
- Here we take the policy adaption to the configuration $E^4_S-U_L$ as an example to show the explicit steps to realize policy adaptation to hybrid soft robots, composed of honeycomb and soft-muscle segments . The feedforward policy is retrained for the new configuration $E^4_S-U_L$ in **Part 4.1**. The Koopman embedding trained in **Part 1.1** is shared for the new configuration $E^4_S-U_L$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the hybrid soft robot $E^4_S-U_L$ based on the action allocation strategy, and updated online, as presented in **Part 4.2**.    
+ Here we take the policy adaption to the configuration $E^4_S-U_L$ as an example to show the explicit steps to realize policy adaptation to hybrid soft robots, composed of honeycomb and soft-muscle segments . The feedforward policy is retrained for the new configuration $E^4_S-U_L$ in **Part 4.1**. The Koopman embedding trained in **Part-pre** is shared for the new configuration $E^4_S-U_L$ without retraining. The policy learned on the honeycomb segement in **Part 1.2** is transferred to the hybrid soft robot $E^4_S-U_L$ based on the action allocation strategy, and updated online, as presented in **Part 4.2**.    
     
 #### Part 4.1 Step 1 Feedforward policy learning for the configuration $E^4_S-U_L$    
  - Collect quasi-static motion data of the configuration $E^4_S-U_L$ and place them in the path "policy_adaptation_hybrid_robot/step1_feedforward_policy_training/quasi_static_data_es4_el.mat".    
@@ -234,14 +240,14 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
 #### Part 4.2 Step2 Policy transfer and online policy learning for the configuration $E^4_S-U_L$    
  - Run "transfer_and_online_policy_learning_es4_el.py" in the path "policy_adaptation_hybrid_robot/step2_transfer_and_online_policy_learning"    
     
-- Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
+- Load the pretrained Koopman embedding function in **Part-pre** without retraining.    
     
     
 - Load the policy learned in **Part 1.2** as the initial policy for the online polilcy learning of the configuration $E^4_S-U_L$.     
     
 ```python    
  # If you want to transfer and run online learning,implement this code and set the n_learning_step:    
- mat = scipy.io.loadmat(r"policy_learning_single_configuration/step3_online_policy_learning_target_reaching/policy/lerl_policy.mat")    
+ mat = scipy.io.loadmat(r"policy_learning_single_configuration/step2_online_policy_learning_target_reaching/policy/lerl_policy.mat")    
  K = mat['K']    
  H = mat['H']    
  H_vec = vec_H(H)    
@@ -291,11 +297,11 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
  #### Part 5.3 Step3 Policy transfer and online policy learning for the configuration $O_M$    
  - Run "transfer_and_online_policy_learning_em.m" in the path "/policy_adaptation_worm_robot_em/step3_online_policy_learning_and_transfer" to learn the feedback policy for the $\text{E}_\text{M}$.    
     
-- Load pretrained koopman embedding from **Part 1.1** in the path"policy_learning _single_configuration/step1_koopman_embedding_training/pretrained_koopman_embedding/Koopman_embedding_for_matlab.mat"    
+- Load pretrained Koopman embedding from **Part-pre** in the path"Koopman_embedding_training/pretrained_Koopman_embedding/Koopman_embedding_for_matlab.mat"    
     
 ```matlab    
  % load pre-trained model    
- w_path = "policy_learning_single_configuration\step1_koopman_embedding_training\pretrained_koopman_embedding\params_for_matlab.mat";    
+ w_path = "policy_learning_single_configuration\step1_Koopman_embedding_training\pretrained_Koopman_embedding\params_for_matlab.mat";    
  dedmd = DeepEDMD(w_path);    
  ```    
  - Load the initialized feedback policy in the path "policy_adaptation_worm_robot_em\step1_policy_initilization\initial_feedback_policy.mat"    
@@ -341,7 +347,7 @@ An MLP-based Koopman embedding was first trained under the honeycomb segment $E^
 - Run "pth_to_mat.py" to convert the feedforward_policy "feedforward_policy_em_el.pth" into the format "feedforward_policy_em_el.mat" suitable for Matlab.    
     
 #### Part 6.2 Step2 Policy transfer and online policy learning for the configuration $O_M-O_L$    
- - Load the pretrained Koopman embedding function in **Part 1.1** without retraining.    
+ - Load the pretrained Koopman embedding function in **Part-pre** without retraining.    
     
 - Load the policy learned in **Part 5.3** as the initial policy for the online polilcy learning of the configuration $O_M-O_L$. Note that $u \in  \mathbb{R}^3$ for the configuration $\text{E}_\text{M}$, while $u \in  \mathbb{R}^6$ holds for the new configuration $O_M-O_L$. We expand the pretrained $H$ matrix to address this disrcepancy.    
     
