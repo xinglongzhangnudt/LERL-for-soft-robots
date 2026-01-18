@@ -19,10 +19,11 @@ Here is the file structure of the project:
   
 ### Function diagrams 
 The function structure and calling relationships of the core code are as follows:
+ - Diagram of Koopman embedding training, run the file `Koopman_embedding_training.py` to start
  ![Diagram of Koopman embedding training](images/function_diagram.jpg)
- Diagram of Koopman embedding training, run the file `Koopman_embedding_training.py` to start
+ - Diagram of online learning, run the file `online_policy_learning.py` to start online control, run the file `feedforward_policy_training_Es1.py` to train the feedforward policy
  ![Diagram of online learning](images/function_diagram2.jpg)
-  Diagram of online learning, run the file `online_policy_learning.py` to start online control, run the file `feedforward_policy_training_Es1.py` to train the feedforward policy
+  
 ## Requirements  
   
 This project requires Python to run. Make sure you have **Python3.9** installed on your system. In addition, you will need to install the following Python libraries:  
